@@ -1,0 +1,26 @@
+name: Frama-C/Eva
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  run_eva:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: FULL FRAMA-C/EVA LOG
+      id: eva
+      uses: maroneze/Frama-C-Eva-Action@v1
+      with:
+        eva-target: 'bit_print.eva'
+    - name: Alarm count
+      run: echo "Eva reported ${{ steps.eva.outputs.alarm-count }}"
+    - name: Eva coverage estimation
+      run: echo "Eva coverage estimation:${{ steps.eva.outputs.coverage }}"
+    - uses: actions/upload-artifact@v2
+      with:
+        name: eva-log
+        path: ${{ github.workspace }}/.frama-c/bit_print.eva/eva.log
